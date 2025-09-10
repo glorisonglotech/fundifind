@@ -12,7 +12,6 @@ const Hero = () => {
       <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-white/30 backdrop-blur-md opacity-30 animate-pulse" />
       <div className="absolute bottom-20 right-10 w-24 h-24 rounded-full bg-white/30 backdrop-blur-md opacity-40 animate-pulse delay-1000" />
       <div className="absolute top-1/3 right-1/4 w-16 h-16 rounded-full bg-white/30 backdrop-blur-md opacity-25 animate-pulse delay-500" />
-
       <div className="relative max-w-6xl mx-auto text-center space-y-8">
         <div className="space-y-4">
           <h1 className="text-5xl md:text-7xl font-bold leading-tight">
@@ -74,6 +73,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
     </section>
   );
 };
