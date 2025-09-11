@@ -65,14 +65,14 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-pink-400" />
-                <span className="text-sm">hello@fundifind.co.ke</span>
+                <span className="text-sm">fundifind@gmail.com</span>
               </div>
             </div>
           </div>
         </div>
         <div className="border-t border-pink-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm">
-            © 2024 FundiFind. All rights reserved.
+            © 2025 FundiFind. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-gray-600">
             {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item, i) => (
