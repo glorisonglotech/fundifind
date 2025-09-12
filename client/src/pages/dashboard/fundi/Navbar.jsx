@@ -33,12 +33,6 @@ const Navbar = () => {
 
         <div className="hidden md:flex gap-6 items-center">
           <a
-            href="#home"
-            className="text-gray-800 hover:text-pink-500 transition"
-          >
-            Home
-          </a>
-          <a
             href="#profile"
             className="text-gray-800 hover:text-pink-500 transition"
           >
@@ -70,13 +64,6 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="mt-4 pt-4 border-t border-pink-200 md:hidden">
           <div className="flex flex-col gap-4">
-            <a
-              href="#home"
-              className="text-gray-800 hover:text-pink-500 transition py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </a>
             <a
               href="#profile"
               className="text-gray-800 hover:text-pink-500 transition py-2"
