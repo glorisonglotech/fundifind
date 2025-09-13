@@ -42,12 +42,11 @@ function App() {
       <Toaster richColors position="top-right" />
       <BrowserRouter>
         <Routes>
-          <Route path="/s" element={<Index />} />
+          <Route path="/" element={<Index />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          {/* <Route path="/fundidashboard" element={<FundiDashboard />} /> */}
-          <Route path="/" element={<RecruiterDashboard />} />
-          {/* <Routes path='/recruiterdashboard' element={<RecruiterDashboard/>}/> */}
+          <Route path="/fundidashboard" element={<FundiDashboard />} />
+          <Routes path='/recruiterdashboard' element={<RecruiterDashboard/>}/>
         </Routes>
       </BrowserRouter>
     </>
