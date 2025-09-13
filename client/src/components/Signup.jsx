@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-// import api from '@/lib/axios';
+import api from '@/lib/axois';
 
 function Signup() {
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('recruiter'); // default role
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // try {
-    //   const res = await api.post('/api/auth/signup', {
-    //     username,
-    //     phone,
-    //     email,
-    //     password,
-    //   });
+    try {
+      const res = await api.post('/api/auth/register', {
+        username,
+        phone,
+        email,
+        password,
+        role,
+      });
 
-    //   localStorage.setItem('token', res.data.token);
-    //   toast.success('Signup successful,log in to your account');
-    //   navigate('/login');
-    // } catch (err) {
-    //   toast.error(err.response?.data?.error || 'Signup failed');
-    // }
+      localStorage.setItem('token', res.data.token);
+      toast.success('Signup successful, log in to your account');
+      navigate('/login');
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Signup failed');
+    }
   };
 
   return (
@@ -80,6 +82,19 @@ function Signup() {
               required
               className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Select Role</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+            >
+              <option value="recruiter">Recruiter</option>
+              <option value="fundi">Fundi</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
           <button
             type="submit"

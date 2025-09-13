@@ -39,14 +39,14 @@ function App() {
 
   return (
     <>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-center" />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/fundidashboard" element={<FundiDashboard />} />
-          <Routes path='/recruiterdashboard' element={<RecruiterDashboard/>}/>
+          <Route path='/recruiterdashboard' element={<RecruiterDashboard/>}/>
         </Routes>
       </BrowserRouter>
     </>

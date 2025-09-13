@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-// import api from '@/lib/axios';
+import api from '@/lib/axois';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -10,15 +10,24 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // try {
-    //   const res = await api.post('/api/auth/login', { email, password });
-    //   localStorage.setItem('token', res.data.token);
-    //   toast.success('Login successful');
-    //   navigate('/shop');
-    // } catch (err) {
-    //   toast.error(err.response?.data?.error || 'Login failed');
-    // }
-    navigate('/fundidashboard');
+    try {
+      const res = await api.post('/api/auth/login', { email, password });
+
+      const { token, role } = res.data;
+
+      localStorage.setItem('token', token);
+      toast.success('Login successful');
+
+      if (role === 'fundi') {
+        navigate('/fundidashboard');
+      } else if (role === 'recruiter') {
+        navigate('/recruiterdashboard');
+      } else {
+        navigate('/'); // fallback for admin or unknown role
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Invalid credentials');
+    }
   };
 
   return (

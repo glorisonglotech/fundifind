@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { BellIcon, UserCircleIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+import {
+  BellIcon,
+  UserCircleIcon,
+  ChatBubbleLeftRightIcon,
+} from "@heroicons/react/24/outline";
 
 const Navbar = ({ onNavigate }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear auth token
     console.log("User logged out");
+    navigate("/"); // Redirect to homepage
   };
 
   const handleNavigate = (section) => {
@@ -46,6 +54,7 @@ const Navbar = ({ onNavigate }) => {
             Logout
           </button>
         </div>
+
         <div className="flex md:hidden gap-4 items-center text-pink-500">
           <button onClick={() => onNavigate("messages")}>
             <ChatBubbleLeftRightIcon className="w-6 h-6" />

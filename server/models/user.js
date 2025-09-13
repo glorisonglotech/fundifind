@@ -5,10 +5,18 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, enum: ["recruiter", "fundi", "admin"], default: "recruiter" },
+  role: {
+    type: String,
+    enum: ["recruiter", "fundi", "admin"],
+    default: "recruiter",
+  },
   phone: String,
   location: String,
   portfolio: [String],
+  verified: {
+    type: Boolean,
+    default: false, 
+  },
 }, { timestamps: true });
 
 userSchema.pre("save", async function () {
