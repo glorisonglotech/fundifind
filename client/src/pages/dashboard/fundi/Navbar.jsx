@@ -99,3 +99,4 @@ const Navbar = ({ onNavigate }) => {
 };
 
 export default Navbar;
+

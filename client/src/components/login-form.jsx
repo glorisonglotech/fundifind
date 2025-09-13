@@ -18,7 +18,7 @@ function Login() {
     // } catch (err) {
     //   toast.error(err.response?.data?.error || 'Login failed');
     // }
-    navigate('../pages/dashboard/fundi/FundiDashboard.jsx');
+    navigate('/fundidashboard');
   };
 
   return (
