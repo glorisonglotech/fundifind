@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { BellIcon, UserCircleIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import {
+  BellIcon,
+  UserCircleIcon,
+  ChatBubbleLeftRightIcon,
+  ClipboardDocumentListIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 
 const Navbar = ({ onNavigate }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -14,8 +20,8 @@ const Navbar = ({ onNavigate }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/30 border-b border-pink-200 px-4 py-3">
-      <div className="flex justify-between items-center mx-auto">
+    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/30 border-b border-pink-200 px-4 py-3 w-full">
+      <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <div className="flex items-center gap-2 text-pink-500 font-bold text-xl">
           <img
             src="https://5a38bbf2bd41a541239fd37d7d4d838d.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1,fit=contain/f1757512360068x441546910684767170/logo.webp"
@@ -25,12 +31,19 @@ const Navbar = ({ onNavigate }) => {
           FundiFind
         </div>
 
+     
         <div className="hidden md:flex gap-6 items-center">
           <button onClick={() => onNavigate("profile")} className="text-gray-800 hover:text-pink-500 transition">
             My Profile
           </button>
+          <button onClick={() => onNavigate("findfundis")} className="text-gray-800 hover:text-pink-500 transition">
+            Find Fundis
+          </button>
           <button onClick={() => onNavigate("messages")} className="text-gray-800 hover:text-pink-500 transition">
             Messages
+          </button>
+          <button onClick={() => onNavigate("bookings")} className="text-gray-800 hover:text-pink-500 transition">
+            Bookings
           </button>
           <button
             onClick={() => onNavigate("notifications")}
@@ -46,15 +59,23 @@ const Navbar = ({ onNavigate }) => {
             Logout
           </button>
         </div>
+
+      
         <div className="flex md:hidden gap-4 items-center text-pink-500">
-          <button onClick={() => onNavigate("messages")}>
+          <button onClick={() => onNavigate("findfundis")} className="p-2">
+            <MagnifyingGlassIcon className="w-6 h-6" />
+          </button>
+          <button onClick={() => onNavigate("messages")} className="p-2">
             <ChatBubbleLeftRightIcon className="w-6 h-6" />
           </button>
-          <button onClick={() => onNavigate("notifications")}>
+          <button onClick={() => onNavigate("bookings")} className="p-2">
+            <ClipboardDocumentListIcon className="w-6 h-6" />
+          </button>
+          <button onClick={() => onNavigate("notifications")} className="p-2">
             <BellIcon className="w-6 h-6" />
           </button>
           <div className="relative">
-            <button onClick={() => setIsProfileOpen(!isProfileOpen)}>
+            <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="p-2">
               <UserCircleIcon className="w-6 h-6" />
             </button>
             {isProfileOpen && (

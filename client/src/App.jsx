@@ -7,6 +7,7 @@ import Index from './pages/Index';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FundiDashboard from './pages/dashboard/fundi/FundiDashboard';
+import RecruiterDashboard from './pages/dashboard/recruiter/RecruiterDashboard';
 
 function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -41,10 +42,12 @@ function App() {
       <Toaster richColors position="top-right" />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/s" element={<Index />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/fundidashboard" element={<FundiDashboard />} />
+          {/* <Route path="/fundidashboard" element={<FundiDashboard />} /> */}
+          <Route path="/" element={<RecruiterDashboard />} />
+          {/* <Routes path='/recruiterdashboard' element={<RecruiterDashboard/>}/> */}
         </Routes>
       </BrowserRouter>
     </>

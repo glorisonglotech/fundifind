@@ -4,6 +4,7 @@ import ProfileHeader from './ProfileHeader';
 import ProfileDetails from './ProfileDetails';
 import Messages from './Messages'; 
 import Notifications from './Notifications';
+import Footer from '@/components/Footer';
 
 
 
@@ -17,6 +18,7 @@ function FundiDashboard() {
       {activeSection === 'profile' && <ProfileDetails />}
       {activeSection === 'messages' && <Messages />}
       {activeSection === 'notifications' && <Notifications />}
+      <Footer/>
     </>
   );
 }
