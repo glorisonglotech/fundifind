@@ -18,5 +18,11 @@ exports.login = async (req, res) => {
   if (!user || !(await user.matchPassword(password))) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
-  res.json({ ...user._doc, token: generateToken(user) });
+  // res.json({ ...user._doc, token: generateToken(user) });
+    res.json({
+    token: generateToken(user),
+    role: user.role,
+    name: user.name,
+    isVerified: user.isVerified // Make sure this field exists in your User model
+  });
 };

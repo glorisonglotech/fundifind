@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import api from '@/lib/axois';
 
 function Signup() {
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('recruiter'); // default role
+  const [role, setRole] = useState('recruiter');
   const navigate = useNavigate();
 
+ 
   const handleSignup = async (e) => {
     e.preventDefault();
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     try {
-      const res = await api.post('/api/auth/register', {
-        username,
-        phone,
-        email,
-        password,
-        role,
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, phone, email, password, role }),
       });
 
-      localStorage.setItem('token', res.data.token);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Signup failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
       toast.success('Signup successful, log in to your account');
       navigate('/login');
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Signup failed');
+      toast.error(err.message);
     }
   };
 

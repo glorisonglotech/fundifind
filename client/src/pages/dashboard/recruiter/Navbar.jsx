@@ -6,12 +6,16 @@ import {
   ClipboardDocumentListIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import {useNavigate} from 'react-router-dom'
 
 const Navbar = ({ onNavigate }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
+  
+  const navigate = useNavigate();
   const handleLogout = () => {
+    localStorage.removeItem("token"); // Clear auth token
     console.log("User logged out");
+    navigate("/"); // Redirect to homepage
   };
 
   const handleNavigate = (section) => {
@@ -31,18 +35,29 @@ const Navbar = ({ onNavigate }) => {
           FundiFind
         </div>
 
-     
         <div className="hidden md:flex gap-6 items-center">
-          <button onClick={() => onNavigate("profile")} className="text-gray-800 hover:text-pink-500 transition">
+          <button
+            onClick={() => onNavigate("profile")}
+            className="text-gray-800 hover:text-pink-500 transition"
+          >
             My Profile
           </button>
-          <button onClick={() => onNavigate("findfundis")} className="text-gray-800 hover:text-pink-500 transition">
+          <button
+            onClick={() => onNavigate("findfundis")}
+            className="text-gray-800 hover:text-pink-500 transition"
+          >
             Find Fundis
           </button>
-          <button onClick={() => onNavigate("messages")} className="text-gray-800 hover:text-pink-500 transition">
+          <button
+            onClick={() => onNavigate("messages")}
+            className="text-gray-800 hover:text-pink-500 transition"
+          >
             Messages
           </button>
-          <button onClick={() => onNavigate("bookings")} className="text-gray-800 hover:text-pink-500 transition">
+          <button
+            onClick={() => onNavigate("bookings")}
+            className="text-gray-800 hover:text-pink-500 transition"
+          >
             Bookings
           </button>
           <button
@@ -60,7 +75,6 @@ const Navbar = ({ onNavigate }) => {
           </button>
         </div>
 
-      
         <div className="flex md:hidden gap-4 items-center text-pink-500">
           <button onClick={() => onNavigate("findfundis")} className="p-2">
             <MagnifyingGlassIcon className="w-6 h-6" />
@@ -75,7 +89,10 @@ const Navbar = ({ onNavigate }) => {
             <BellIcon className="w-6 h-6" />
           </button>
           <div className="relative">
-            <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="p-2">
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="p-2"
+            >
               <UserCircleIcon className="w-6 h-6" />
             </button>
             {isProfileOpen && (

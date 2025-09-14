@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CheckBadgeIcon, PencilSquareIcon, StarIcon } from '@heroicons/react/24/solid';
-import api from '@/lib/axois';
 
 function ProfileHeader() {
   const [user, setUser] = useState(null);
@@ -10,14 +9,17 @@ function ProfileHeader() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await api.get('/api/profile', {
+        const response = await fetch('http://localhost:5000/api/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setUser(res.data);
+
+        if (!response.ok) throw new Error('Failed to fetch profile');
+        const data = await response.json();
+        setUser(data);
       } catch (err) {
-        console.error('Failed to fetch profile:', err);
+        console.error(err.message);
       }
     };
 
@@ -33,15 +35,19 @@ function ProfileHeader() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await api.put('/api/profile', formData, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/profile`, {
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
         },
+        body: formData,
       });
-      setUser(res.data);
+
+      if (!response.ok) throw new Error('Failed to upload image');
+      const updatedUser = await response.json();
+      setUser(updatedUser);
     } catch (err) {
-      console.error('Failed to upload image:', err);
+      console.error(err.message);
     }
   };
 
