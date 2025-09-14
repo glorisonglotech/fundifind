@@ -14,14 +14,23 @@ app.use(cors());
 app.use(express.json());
 // app.use(cors({ origin: 'https://fundifind.netlify.app' }));
 
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://fundifind.netlify.app'
-    : 'http://localhost:4173',
-  credentials: true,
-};
 
-app.use(cors(corsOptions));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://fundifind.netlify.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 
 
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
