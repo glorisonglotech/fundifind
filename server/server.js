@@ -12,7 +12,18 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(cors({ origin: 'https://fundifind.netlify.app' }));
+// app.use(cors({ origin: 'https://fundifind.netlify.app' }));
+
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://fundifind.netlify.app'
+    : 'http://localhost:4173',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
