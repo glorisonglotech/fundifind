@@ -3,11 +3,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster, toast } from 'sonner';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
+import { UserProvider } from '@/context/UserContext'; 
 import Index from './pages/Index';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FundiDashboard from './pages/dashboard/fundi/FundiDashboard';
 import RecruiterDashboard from './pages/dashboard/recruiter/RecruiterDashboard';
+
 
 function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -23,7 +25,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); // Prevent default prompt
+      e.preventDefault();
       setDeferredPrompt(e);
 
       toast.info('Install FundiFind app for faster access', {
@@ -38,7 +40,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <UserProvider>
       <Toaster richColors position="top-center" />
       <BrowserRouter>
         <Routes>
@@ -46,10 +48,10 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/fundidashboard" element={<FundiDashboard />} />
-          <Route path='/recruiterdashboard' element={<RecruiterDashboard/>}/>
+          <Route path="/recruiterdashboard" element={<RecruiterDashboard />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </UserProvider>
   );
 }
 

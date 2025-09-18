@@ -1,48 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FundiCard from "@/components/FundiCard"; // Adjust path if needed
-
-const fundis = [
-  {
-    skill: "Carpentry",
-    rating: 4.7,
-    reviews: 145,
-    rate: 50,
-    description: "Expert carpenter with custom furniture design abilities.",
-  },
-  {
-    skill: "Plumbing",
-    rating: 4.5,
-    reviews: 120,
-    rate: 45,
-    description: "Master plumber with over 20 years of experience.",
-  },
-  {
-    skill: "Cleaning",
-    rating: 4.3,
-    reviews: 66,
-    rate: 35,
-    description: "Dedicated cleaner with a strong focus on non-toxic methods.",
-  },
-  {
-    skill: "Painting",
-    rating: 4.2,
-    reviews: 75,
-    rate: 40,
-    description: "Professional painter known for detailed and vibrant work.",
-  },
-  {
-    skill: "Electrical",
-    rating: 4.1,
-    reviews: 98,
-    rate: 55,
-    description: "Licensed electrician specialized in solar panel installation.",
-  },
-];
 
 const FindFundiSection = () => {
   const [location, setLocation] = useState("");
   const [skill, setSkill] = useState("All Skills");
   const [sort, setSort] = useState("Rating");
+  const [fundis, setFundis] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchFundis = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const params = new URLSearchParams();
+      if (location) params.append("location", location);
+      if (skill !== "All Skills") params.append("skill", skill);
+      if (sort) params.append("sort", sort.toLowerCase());
+
+      const token = localStorage.getItem("token"); // If route is protected
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/profile/fundis?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch fundis.");
+      }
+
+      const data = await response.json();
+      setFundis(data);
+    } catch (err) {
+      setError("Failed to load fundis. Please try again.");
+      console.error("Error fetching fundis:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFundis();
+  }, [location, skill, sort]);
+
+  if (loading) {
+    return (
+      <section className="w-full px-4 py-8 max-w-screen-xl mx-auto overflow-hidden">
+        <h2 className="text-2xl font-bold text-pink-600 mb-6 text-center sm:text-left">
+          Find Your Perfect Fundi
+        </h2>
+        <div className="flex justify-center items-center space-x-2">
+          <div className="animate-spin border-t-2 border-white w-8 h-8 rounded-full"></div>
+          <span>Loading...</span>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="w-full px-4 py-8 max-w-screen-xl mx-auto overflow-hidden">
+        <h2 className="text-2xl font-bold text-pink-600 mb-6 text-center sm:text-left">
+          Find Your Perfect Fundi
+        </h2>
+        <div className="bg-red-600 text-white p-3 rounded mb-4">{error}</div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full px-4 py-8 max-w-screen-xl mx-auto overflow-hidden">
@@ -82,7 +111,10 @@ const FindFundiSection = () => {
           </select>
         </div>
         <div className="mt-4 flex justify-center sm:justify-start">
-          <button className="bg-pink-500 text-white px-6 py-2 rounded hover:bg-pink-600 w-full sm:w-auto">
+          <button
+            className="bg-pink-500 text-white px-6 py-2 rounded hover:bg-pink-600 w-full sm:w-auto"
+            onClick={fetchFundis}
+          >
             Apply Filters
           </button>
         </div>
@@ -93,11 +125,11 @@ const FindFundiSection = () => {
         {fundis.map((fundi, index) => (
           <FundiCard
             key={index}
-            skill={fundi.skill}
-            rating={fundi.rating}
-            reviews={fundi.reviews}
-            rate={fundi.rate}
-            description={fundi.description}
+            name={fundi.name}
+            skill={fundi.skills ? fundi.skills.join(", ") : "N/A"}
+            rating={fundi.rating || 4.9}
+            reviews={fundi.reviews || 32}
+            location={fundi.location}
           />
         ))}
       </div>

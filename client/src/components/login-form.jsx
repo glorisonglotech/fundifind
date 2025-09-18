@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useUser } from '@/context/UserContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { login } = useUser();
 
-  
-   
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -16,13 +16,14 @@ function Login() {
       toast.error('Please enter both email and password');
       return;
     }
+
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     try {
+      // Step 1: Login and get token
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
@@ -32,14 +33,22 @@ function Login() {
       }
 
       const data = await response.json();
-      console.log('Login response:', data);
-      const { token, role ,name,isVerified} = data;
-
+      const { token, role } = data;
       localStorage.setItem('token', token);
-      localStorage.setItem('username',name);
-      localStorage.setItem('isVerified', isVerified);
+
+      // Step 2: Fetch full profile using token
+      const profileRes = await fetch(`${API_BASE_URL}/api/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!profileRes.ok) throw new Error('Failed to fetch profile');
+      const profileData = await profileRes.json();
+
+      // Step 3: Save user in context
+      login(profileData);
+
       toast.success('Login successful');
 
+      // Step 4: Navigate based on role
       switch (role) {
         case 'fundi':
           navigate('/fundidashboard');
@@ -67,7 +76,6 @@ function Login() {
           className="w-3/4"
         />
       </div>
-
       <div className="flex flex-col justify-center px-8 py-12">
         <h2 className="text-3xl font-bold text-pink-600 mb-6">Welcome Back</h2>
         <form onSubmit={handleLogin} className="space-y-6">

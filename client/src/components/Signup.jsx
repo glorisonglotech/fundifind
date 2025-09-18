@@ -8,19 +8,27 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('recruiter');
+  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
 
- 
   const handleSignup = async (e) => {
     e.preventDefault();
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('phone', phone);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('role', role);
+    if (profileImage) {
+      formData.append('portfolio', profileImage); // Match backend field name
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, phone, email, password, role }),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -49,7 +57,7 @@ function Signup() {
 
       <div className="flex flex-col justify-center px-8 py-12">
         <h2 className="text-3xl font-bold text-pink-600 mb-6">Create Your Account</h2>
-        <form onSubmit={handleSignup} className="space-y-6">
+        <form onSubmit={handleSignup} className="space-y-6" encType="multipart/form-data">
           <div>
             <label className="block text-sm font-medium text-gray-700">Username</label>
             <input
@@ -57,7 +65,7 @@ function Signup() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2"
             />
           </div>
           <div>
@@ -67,7 +75,7 @@ function Signup() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2"
             />
           </div>
           <div>
@@ -77,7 +85,7 @@ function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2"
             />
           </div>
           <div>
@@ -87,7 +95,7 @@ function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2"
             />
           </div>
           <div>
@@ -96,12 +104,21 @@ function Signup() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 bg-white"
             >
               <option value="recruiter">Recruiter</option>
               <option value="fundi">Fundi</option>
               <option value="admin">Admin</option>
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setProfileImage(e.target.files[0])}
+              className="mt-1 block w-full"
+            />
           </div>
           <button
             type="submit"
