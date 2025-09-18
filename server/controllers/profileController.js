@@ -26,6 +26,23 @@ exports.getProfile = async (req, res) => {
 };
 
 
+exports.getFundis = async (req, res) => {
+  try {
+    // Query users with role 'fundi'
+    const fundis = await User.find({ role: "fundi" }).select("-password"); // Exclude password
+
+    if (fundis.length === 0) {
+      return res.status(404).json({ message: "No fundis found" });
+    }
+
+    // Send the list of fundis
+    res.json(fundis);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 exports.updateProfile = async (req, res) => {
   const user = await User.findById(req.user._id);
