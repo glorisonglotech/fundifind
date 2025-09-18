@@ -5,12 +5,15 @@ exports.getProfile = async (req, res) => {
     const user = await User.findById(req.user._id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Fallback for empty portfolio
+    const portfolio = user.portfolio.length > 0 ? user.portfolio : ['path/to/default-image.jpg']; // Default image
+
     res.json({
       name: user.name,
-      email: user.email,  // Adding email to the response
+      email: user.email, 
       phone: user.phone,
       location: user.location,
-      portfolio: user.portfolio,
+      portfolio: portfolio,
       role: user.role,
       verified: user.verified,
       rating: user.rating || 4.9,
@@ -21,6 +24,7 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 exports.updateProfile = async (req, res) => {
