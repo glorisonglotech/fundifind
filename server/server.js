@@ -26,9 +26,25 @@ const io = socketio(server, {
 
 app.use(express.json());
 
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://fundifind.netlify.app"
+// ];
+
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true
+// }));
+
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://fundifind.netlify.app"
+  'http://localhost:5173',
+  'https://fundifind.netlify.app'
 ];
 
 app.use(cors({
@@ -36,11 +52,17 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Optional: respond to all OPTIONS requests
+app.options('/{*splat}', cors()); // Fully compatible with Express 5's new syntax
+
 
 // Static file serving
 app.use("/uploads", express.static("uploads"));
