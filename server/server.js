@@ -1,23 +1,34 @@
 const express = require("express");
+const http = require("http");
+const socketio = require("socket.io");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 
+
 dotenv.config();
 connectDB();
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server, {
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "https://fundifind.netlify.app"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
-// Middleware
-app.use(cors());
+
 app.use(express.json());
-// app.use(cors({ origin: 'https://fundifind.netlify.app' }));
-
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://fundifind.netlify.app'
+  "http://localhost:5173",
+  "https://fundifind.netlify.app"
 ];
 
 app.use(cors({
@@ -25,18 +36,16 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true
 }));
 
-
-
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Static file serving
+app.use("/uploads", express.static("uploads"));
 
 // Routes
-app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/profile", require("./routes/profileRoutes"));
 app.use("/api/services", require("./routes/serviceRoutes"));
@@ -45,13 +54,30 @@ app.use("/api/messages", require("./routes/chatRoutes"));
 app.use("/api/payments", require("./routes/paymentRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 
-
 app.get("/", (req, res) => {
   res.send("FundiFind API is running...");
 });
 
+// Socket.IO logic
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
+  socket.on("joinRoom", (roomId) => {
+    socket.join(roomId);
+    console.log(`Socket ${socket.id} joined room ${roomId}`);
+  });
+
+  socket.on("sendMessage", ({ roomId, message }) => {
+    io.to(roomId).emit("receiveMessage", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
 });
