@@ -16,13 +16,13 @@ function Signup() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     const formData = new FormData();
-    formData.append('username', username);
+    formData.append('name', username); // Backend expects 'name'
     formData.append('phone', phone);
     formData.append('email', email);
     formData.append('password', password);
     formData.append('role', role);
     if (profileImage) {
-      formData.append('portfolio', profileImage); // Match backend field name
+      formData.append('portfolio', profileImage); // Field name matches Multer config
     }
 
     try {
@@ -31,9 +31,17 @@ function Signup() {
         body: formData,
       });
 
+      const contentType = response.headers.get('content-type');
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Signup failed');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Signup failed');
+        } else {
+          const errorText = await response.text();
+          console.error('Unexpected response:', errorText);
+          throw new Error('Unexpected error occurred');
+        }
       }
 
       const data = await response.json();
