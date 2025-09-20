@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { io } from 'socket.io-client';
+
+const SOCKET_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 function Messages() {
   const [conversations] = useState([
-    { id: 1, name: "Alice", lastMessage: "Thanks for the quote!" },
-    { id: 2, name: "Brian", lastMessage: "Can we reschedule?" },
+    { id: 'room1', name: "Alice", lastMessage: "Thanks for the quote!" },
+    { id: 'room2', name: "Brian", lastMessage: "Can we reschedule?" },
   ]);
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
-  const [messages, setMessages] = useState([
-    { sender: "Alice", text: "Hi, are you available next week?" },
-    { sender: "You", text: "Yes, I am!" },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const socketRef = useRef();
+
+  useEffect(() => {
+    socketRef.current = io(SOCKET_URL);
+
+    // Join room when conversation changes
+    if (selectedConversation) {
+      socketRef.current.emit('joinRoom', selectedConversation.id);
+      setMessages([]); // Optionally clear messages on room change
+    }
+
+    // Listen for incoming messages
+    socketRef.current.on('receiveMessage', (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [selectedConversation]);
 
   const sendMessage = () => {
     if (newMessage.trim()) {
-      setMessages([...messages, { sender: "You", text: newMessage }]);
+      const messageObj = { sender: "You", text: newMessage };
+      socketRef.current.emit('sendMessage', {
+        roomId: selectedConversation.id,
+        message: messageObj,
+      });
+      setMessages((prev) => [...prev, messageObj]);
       setNewMessage("");
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 h-screen bg-white">
-      
       {/* Sidebar */}
       <aside className="bg-pink-50 border-r border-pink-200 p-4">
         <h2 className="text-xl font-bold text-pink-600 mb-4">Conversations</h2>
