@@ -36,6 +36,7 @@ app.use(cors({
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
+app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/profile", require("./routes/profileRoutes"));
 app.use("/api/services", require("./routes/serviceRoutes"));

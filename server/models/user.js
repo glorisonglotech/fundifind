@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   location: String,
+  profileImage: { type: String, default: null },
   portfolio: [String],
   verified: {
     type: Boolean,
